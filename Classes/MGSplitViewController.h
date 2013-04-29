@@ -119,7 +119,7 @@ typedef enum _MGSplitViewDividerStyle {
 // contained viewcontrollers, a la UINavigationController.
 @interface UIViewController (MGSplitView)
 
-@property(nonatomic,readonly,retain) MGSplitViewController *splitViewController;
+@property(nonatomic,readonly,retain) MGSplitViewController *mgSplitViewController;
 
 @end
 

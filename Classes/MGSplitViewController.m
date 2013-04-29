@@ -27,9 +27,9 @@
 @interface UIViewController (MGSplitView_Internal)
 
 // internal setter for the splitViewController property on UIViewController
-- (void)setSplitViewController:(MGSplitViewController*)splitViewController;
+- (void)setMgSplitViewController:(MGSplitViewController*)mgSplitViewController;
 
-@property(nonatomic,strong) MGSplitViewController *splitViewController;
+@property(nonatomic,strong) MGSplitViewController *mgSplitViewController;
 
 @end
 
@@ -971,7 +971,13 @@
 		newMaster = [NSNull null];
 	}
     
-    master.splitViewController = self;
+    master.mgSplitViewController = self;
+    
+    if ([master isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *controller = (UINavigationController *)master;
+        UIViewController *vc = controller.viewControllers[0];
+        vc.mgSplitViewController = self;
+    }
 	
 	BOOL changed = YES;
 	if ([_viewControllers count] > 0) {
@@ -1011,7 +1017,13 @@
 		[_viewControllers addObject:[NSNull null]];
 	}
 	
-    detail.splitViewController = self;
+    detail.mgSplitViewController = self;
+    
+    if ([detail isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *controller = (UINavigationController *)detail;
+        UIViewController *vc = controller.viewControllers[0];
+        vc.mgSplitViewController = self;
+    }
     
 	BOOL changed = YES;
 	if ([_viewControllers count] > 1) {
@@ -1155,17 +1167,17 @@
 
 @implementation UIViewController (MGSplitView_Internal)
 
-@dynamic splitViewController;
+@dynamic mgSplitViewController;
 
 static char* splitViewControllerKey = "SplitViewController";
 
-- (MGSplitViewController*)splitViewController {
+- (MGSplitViewController*)mgSplitViewController {
     id result = objc_getAssociatedObject(self, splitViewControllerKey);
     return result;
 }
 
-- (void)setSplitViewController:(MGSplitViewController*)splitViewController {
-    objc_setAssociatedObject(self, splitViewControllerKey, splitViewController, OBJC_ASSOCIATION_RETAIN);
+- (void)setMgSplitViewController:(MGSplitViewController*)mgSplitViewController {
+    objc_setAssociatedObject(self, splitViewControllerKey, mgSplitViewController, OBJC_ASSOCIATION_RETAIN);
 }
 
 @end
