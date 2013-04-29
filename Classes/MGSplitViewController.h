@@ -115,7 +115,7 @@ typedef enum _MGSplitViewDividerStyle {
 
 @end
 
-// category on UIViewController to provide access to the viewDeckController in the
+// category on UIViewController to provide access to the splitViewController in the
 // contained viewcontrollers, a la UINavigationController.
 @interface UIViewController (MGSplitView)
 
