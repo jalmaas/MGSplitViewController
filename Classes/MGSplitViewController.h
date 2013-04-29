@@ -114,3 +114,12 @@ typedef enum _MGSplitViewDividerStyle {
 - (float)splitViewController:(MGSplitViewController *)svc constrainSplitPosition:(float)proposedPosition splitViewSize:(CGSize)viewSize;
 
 @end
+
+// category on UIViewController to provide access to the viewDeckController in the
+// contained viewcontrollers, a la UINavigationController.
+@interface UIViewController (MGSplitView)
+
+@property(nonatomic,readonly,retain) MGSplitViewController *splitViewController;
+
+@end
+

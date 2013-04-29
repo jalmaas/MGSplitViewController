@@ -9,6 +9,7 @@
 #import "MGSplitViewController.h"
 #import "MGSplitDividerView.h"
 #import "MGSplitCornersView.h"
+#import <objc/runtime.h>
 
 #define MG_DEFAULT_SPLIT_POSITION		320.0	// default width of master view in UISplitViewController.
 #define MG_DEFAULT_SPLIT_WIDTH			1.0		// default width of split-gutter in UISplitViewController.
@@ -23,6 +24,14 @@
 #define MG_ANIMATION_CHANGE_SPLIT_ORIENTATION	@"ChangeSplitOrientation"	// Animation ID for internal use.
 #define MG_ANIMATION_CHANGE_SUBVIEWS_ORDER		@"ChangeSubviewsOrder"	// Animation ID for internal use.
 
+@interface UIViewController (MGSplitView_Internal)
+
+// internal setter for the splitViewController property on UIViewController
+- (void)setSplitViewController:(MGSplitViewController*)splitViewController;
+
+@property(nonatomic,strong) MGSplitViewController *splitViewController;
+
+@end
 
 @interface MGSplitViewController (MGPrivateMethods)
 
@@ -961,6 +970,8 @@
 	if (!newMaster) {
 		newMaster = [NSNull null];
 	}
+    
+    master.splitViewController = self;
 	
 	BOOL changed = YES;
 	if ([_viewControllers count] > 0) {
@@ -1000,6 +1011,8 @@
 		[_viewControllers addObject:[NSNull null]];
 	}
 	
+    detail.splitViewController = self;
+    
 	BOOL changed = YES;
 	if ([_viewControllers count] > 1) {
 		if ([_viewControllers objectAtIndex:1] == detail) {
@@ -1135,5 +1148,24 @@
 @synthesize allowsDraggingDivider;
 @synthesize dividerStyle;
 
+
+@end
+
+
+
+@implementation UIViewController (MGSplitView_Internal)
+
+@dynamic splitViewController;
+
+static char* splitViewControllerKey = "SplitViewController";
+
+- (MGSplitViewController*)splitViewController {
+    id result = objc_getAssociatedObject(self, splitViewControllerKey);
+    return result;
+}
+
+- (void)setSplitViewController:(MGSplitViewController*)splitViewController {
+    objc_setAssociatedObject(self, splitViewControllerKey, splitViewController, OBJC_ASSOCIATION_RETAIN);
+}
 
 @end
